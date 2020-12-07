@@ -1,5 +1,6 @@
 (ns day-five
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [clojure.set :as set]))
 
 (def input
   (->> "data/5-1.txt"
@@ -38,8 +39,14 @@
        (map #(->seat-id % possible-rows possible-columns))
        (apply max)))
 
+(defn part-two [boarding-passes possible-rows possible-columns]
+  (let [seat-ids (map #(->seat-id % possible-rows possible-columns) boarding-passes)
+        possible-seat-ids (range (apply min seat-ids) (+ 1 (apply max seat-ids)))]
+    (set/difference (set possible-seat-ids) (set seat-ids))))
+
 (comment
-  (= 998 (part-one input possible-rows possible-columns)))
+  (= 998 (part-one input possible-rows possible-columns))
+  (= #{676} (part-two input possible-rows possible-columns)))
 
 (comment
   (split-at 7 "BBFFBBFRLL")
