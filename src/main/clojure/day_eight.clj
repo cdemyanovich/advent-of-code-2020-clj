@@ -31,9 +31,12 @@
   [state executions program]
   (if (contains? executions (:instruction-pointer state))
     state
-    (let [instruction (nth program (:instruction-pointer state))]
-      (recur (((:operation instruction) operations) (:argument instruction) state)
-             (conj executions (:instruction-pointer state))
+    (let [instruction-pointer (:instruction-pointer state)
+          {:keys [operation argument]} (nth program instruction-pointer)
+          updated-state ((operation operations) argument state)
+          updated-executions (conj executions instruction-pointer)]
+      (recur updated-state
+             updated-executions
              program))))
 
 (def sample-program "nop +0
