@@ -28,12 +28,29 @@
 
 (def operations {:acc acc :jmp jmp :nop nop})
 
+(defn jmp->nop [instructions]
+  (for [[index {:keys [operation argument]}] (map-indexed vector instructions)
+        :when (= :jmp operation)]
+    (assoc instructions index {:operation :nop :argument argument})))
+
+(defn nop->jmp [instructions]
+  (for [[index {:keys [operation argument]}] (map-indexed vector instructions)
+        :when (= :nop operation)]
+    (assoc instructions index {:operation :jmp :argument argument})))
+
+(defn ->candidate-progams
+  [program]
+  (->> program
+       ((juxt jmp->nop nop->jmp))
+       (apply concat))
+  )
+
 (defn execute
   [state executions program]
   (cond
     (contains? executions (:instruction-pointer state))
     state
-    (> (:instruction-pointer state) (count program))
+    (>= (:instruction-pointer state) (count program))
     (assoc state :terminated true)
     :else
     (let [instruction-pointer (:instruction-pointer state)
@@ -67,6 +84,19 @@ acc +6")
        (execute initial-state #{})
        (:accumulator)))
 
+(defn part-two [program]
+  (->> program
+       str/split-lines
+       (map parse-instruction)
+       vec
+       (->candidate-progams)
+       (map (partial execute initial-state #{}))
+       (filter #(true? (:terminated %)))
+       first
+       (:accumulator)))
+
 (comment
   (= 5 (part-one sample-program))
-  (= 1610 (part-one input)))
+  (= 1610 (part-one input))
+  (= 8 (part-two sample-program))
+  (= 1703 (part-two input)))
