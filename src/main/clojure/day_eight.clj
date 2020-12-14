@@ -4,19 +4,19 @@
 
 (defn parse-instruction
   [line]
-  (let [[instruction argument] (str/split line #" ")]
-    {:instruction instruction
+  (let [[operation argument] (str/split line #" ")]
+    {:operation operation
      :argument (Integer/parseInt argument)}))
 
 (defn next-index
-  [current-index {:keys [instruction argument]}]
-  (if (= instruction "jmp")
+  [current-index {:keys [operation argument]}]
+  (if (= operation "jmp")
     (+ current-index argument)
     (inc current-index)))
 
 (defn next-accumulator
-  [current-accumulator {:keys [instruction argument]}]
-  (if (= instruction "acc")
+  [current-accumulator {:keys [operation argument]}]
+  (if (= operation "acc")
     (+ current-accumulator argument)
     current-accumulator))
 
