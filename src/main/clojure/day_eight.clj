@@ -27,42 +27,14 @@
 
 (def operations {:acc acc :jmp jmp :nop nop})
 
-(defn next-index
-  [current-index {:keys [operation argument]}]
-  (if (= operation :jmp)
-    (+ current-index argument)
-    (inc current-index)))
-
-(defn next-accumulator
-  [current-accumulator {:keys [operation argument]}]
-  (if (= operation :acc)
-    (+ current-accumulator argument)
-    current-accumulator))
-
-(defn record-execution
-  [executions index]
-  (conj executions index))
-
-(defn already-executed?
-  [executions index]
-  (contains? executions index))
-
 (defn execute
-  ([index accumulator executions program]
-   (if (already-executed? executions index)
-     accumulator
-     (let [instruction (nth program index)]
-       (recur (next-index index instruction)
-              (next-accumulator accumulator instruction)
-              (record-execution executions index)
-              program))))
-  ([state executions program]
-   (if (contains? executions (:instruction-pointer state))
-     state
-     (let [instruction (nth program (:instruction-pointer state))]
-       (recur (((:operation instruction) operations) (:argument instruction) state)
-              (conj executions (:instruction-pointer state))
-              program)))))
+  [state executions program]
+  (if (contains? executions (:instruction-pointer state))
+    state
+    (let [instruction (nth program (:instruction-pointer state))]
+      (recur (((:operation instruction) operations) (:argument instruction) state)
+             (conj executions (:instruction-pointer state))
+             program))))
 
 (def sample-program "nop +0
 acc +1
