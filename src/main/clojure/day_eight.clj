@@ -9,7 +9,8 @@
      :argument (Integer/parseInt argument)}))
 
 (def initial-state {:instruction-pointer 0
-                    :accumulator 0})
+                    :accumulator 0
+                    :terminated false})
 
 (defn acc
   [argument state]
@@ -29,8 +30,12 @@
 
 (defn execute
   [state executions program]
-  (if (contains? executions (:instruction-pointer state))
+  (cond
+    (contains? executions (:instruction-pointer state))
     state
+    (> (:instruction-pointer state) (count program))
+    (assoc state :terminated true)
+    :else
     (let [instruction-pointer (:instruction-pointer state)
           {:keys [operation argument]} (nth program instruction-pointer)
           updated-state ((operation operations) argument state)
