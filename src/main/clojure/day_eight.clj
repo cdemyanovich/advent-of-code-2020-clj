@@ -5,18 +5,37 @@
 (defn parse-instruction
   [line]
   (let [[operation argument] (str/split line #" ")]
-    {:operation operation
+    {:operation (keyword operation)
      :argument (Integer/parseInt argument)}))
+
+(def initial-state {:instruction-pointer 0
+                    :accumulator 0})
+
+(defn acc
+  [argument state]
+  (-> state
+      (update :instruction-pointer inc)
+      (update :accumulator #(+ argument %))))
+
+(defn jmp
+  [argument state]
+  (update state :instruction-pointer #(+ argument %)))
+
+(defn nop
+  [argument state]
+  (update state :instruction-pointer inc))
+
+(def operations {:acc acc :jmp jmp :nop nop})
 
 (defn next-index
   [current-index {:keys [operation argument]}]
-  (if (= operation "jmp")
+  (if (= operation :jmp)
     (+ current-index argument)
     (inc current-index)))
 
 (defn next-accumulator
   [current-accumulator {:keys [operation argument]}]
-  (if (= operation "acc")
+  (if (= operation :acc)
     (+ current-accumulator argument)
     current-accumulator))
 
@@ -29,14 +48,21 @@
   (contains? executions index))
 
 (defn execute
-  [index accumulator executions program]
-  (if (already-executed? executions index)
-    accumulator
-    (let [instruction (nth program index)]
-      (recur (next-index index instruction)
-             (next-accumulator accumulator instruction)
-             (record-execution executions index)
-             program))))
+  ([index accumulator executions program]
+   (if (already-executed? executions index)
+     accumulator
+     (let [instruction (nth program index)]
+       (recur (next-index index instruction)
+              (next-accumulator accumulator instruction)
+              (record-execution executions index)
+              program))))
+  ([state executions program]
+   (if (contains? executions (:instruction-pointer state))
+     state
+     (let [instruction (nth program (:instruction-pointer state))]
+       (recur (((:operation instruction) operations) (:argument instruction) state)
+              (conj executions (:instruction-pointer state))
+              program)))))
 
 (def sample-program "nop +0
 acc +1
@@ -58,7 +84,8 @@ acc +6")
        str/split-lines
        (map parse-instruction)
        vec
-       (execute 0 0 #{})))
+       (execute initial-state #{})
+       (:accumulator)))
 
 (comment
   (= 5 (part-one sample-program))
