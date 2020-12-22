@@ -26,6 +26,19 @@
        (filter #(not (nil? %)))
        first))
 
+(defn sums-to?
+  [numbers target-sum]
+  (= target-sum (reduce + numbers)))
+
+(defn part-two [numbers preamble-size]
+  (let [target-sum (part-one numbers preamble-size)]
+    (loop [size 2]
+      (let [partitions (partition size 1 numbers)
+            found-partition (first (filter #(sums-to? % target-sum) partitions))]
+        (if found-partition
+          (+ (apply min found-partition) (apply max found-partition))
+          (recur (inc size)))))))
+
 (def sample-input [35
                    20
                    15
@@ -57,4 +70,6 @@
 (comment
   (= 127 (part-one sample-input 5))
   (= 552655238 (part-one input 25))
+  (= 62 (part-two sample-input 5))
+  (= 70672245 (part-two input 25))
   ,)
