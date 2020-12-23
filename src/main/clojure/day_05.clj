@@ -46,7 +46,8 @@
 
 (comment
   (= 998 (part-one input possible-rows possible-columns))
-  (= #{676} (part-two input possible-rows possible-columns)))
+  (= #{676} (part-two input possible-rows possible-columns))
+  ,)
 
 (comment
   (split-at 7 "BBFFBBFRLL")
@@ -57,4 +58,5 @@
   (= 4 (find-position possible-columns "RLL"))
   (= 119 (seat-id (find-position possible-rows "FFFBBBF") (find-position possible-columns "RRR")))
   (= 567 (seat-id (find-position possible-rows "BFFFBBF") (find-position possible-columns "RRR")))
-  (= 820 (seat-id (find-position possible-rows "BBFFBBF") (find-position possible-columns "RLL"))))
+  (= 820 (seat-id (find-position possible-rows "BBFFBBF") (find-position possible-columns "RLL")))
+  ,)
