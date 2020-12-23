@@ -1,4 +1,4 @@
-(ns day-three
+(ns day-03
   (:require [clojure.java.io :as io]))
 
 (def forest
