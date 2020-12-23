@@ -1,4 +1,4 @@
-(ns day-two
+(ns day-02
   (:require [clojure.java.io :as io]))
 
 (def input
