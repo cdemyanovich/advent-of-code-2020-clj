@@ -1,4 +1,4 @@
-(ns day-one
+(ns day-01
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.math.combinatorics :as combinatorics]))
@@ -36,7 +36,6 @@
        (reduce *)))
 
 (comment
-  (part-one entries))
-
-(comment
-  (part-two entries))
+  (= 888331 (part-one entries))
+  (= 130933530 (part-two entries))
+  ,)
