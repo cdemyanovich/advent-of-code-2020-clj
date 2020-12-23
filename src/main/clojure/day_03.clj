@@ -31,4 +31,5 @@
 
 (comment
   (= 178 (part-one forest))
-  (= 3492520200 (part-two forest)))
+  (= 3492520200 (part-two forest))
+  ,)
