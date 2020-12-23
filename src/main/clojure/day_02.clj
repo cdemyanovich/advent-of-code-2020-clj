@@ -56,7 +56,6 @@
        count))
 
 (comment
-  (part-one input))
-
-(comment
-  (part-two input))
+  (= 465 (part-one input))
+  (= 294 (part-two input))
+  ,)
