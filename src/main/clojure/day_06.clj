@@ -22,4 +22,5 @@
 
 (comment
   (= 7128 (part-one input))
-  (= 3640 (part-two input)))
+  (= 3640 (part-two input))
+  ,)
