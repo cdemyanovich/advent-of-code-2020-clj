@@ -1,4 +1,4 @@
-(ns day-six
+(ns day-06
   (:require [clojure.java.io :as io]
             [clojure.set :as set]
             [clojure.string :as str]))
