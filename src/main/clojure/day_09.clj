@@ -1,4 +1,4 @@
-(ns day-nine
+(ns day-09
   (:require [clojure.java.io :as io]
             [clojure.math.combinatorics :as combinatorics]
             [clojure.string :as str]))
